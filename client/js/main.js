@@ -1,17 +1,29 @@
 require(
-	["jquery", "underscore", "can"],
-	function($, _, can) {
+	["jquery", "underscore", "can",
+	"js/prototypeController",
+	"js/loginController",
+	"js/gameController",],
+	function($, _, can, PrototypeController, LoginController, GameController) {
 
-		var LoginController = can.Control.extend({
-			defaults: {
-				view: "../static/templates/login.mustache",
-			}
-		}, {
-			init: function(element, options) {
-				element.html(can.view(options.view));
-			}
+		var localOptions = new can.Map({
+			uid: undefined,
+			gid: undefined,
+			ws: undefined,
 		});
 
-		var loginPage = new LoginController("#out");
+		var createPage = function(pageName) {
+			if (pageName === "game") {
+				self.currentController = new GameController("#out", {
+					createPage: createPage,
+					localOptions: localOptions,
+				});
+			} else if (pageName === "login") {
+				self.currentController = new LoginController("#out", {
+					createPage: createPage,
+					localOptions: localOptions,
+				});
+			}
+		};
 
+		createPage("login");
 });

@@ -32,3 +32,45 @@ body, p, a, div, input {
 .container {
 	padding: 15px;
 }
+
+.loginBox {
+	min-width: 40%;
+}
+
+.gameBox {
+	min-width: 50%;
+}
+
+.info > div {
+	margin-bottom: 20px;
+}
+
+.gidInfo {
+	width: 100%;
+}
+
+.userInfoItem {
+	width: 49%;
+	display: inline-block;
+}
+
+a.button {
+	padding: 6px;
+	border: 1px solid #999;
+
+	-webkit-border-radius: 7;
+	-moz-border-radius: 7;
+	border-radius: 7px;
+	background-color: #fff;
+	font-weight: bold;
+}
+
+a.button:hover {
+	background-color: #ddd;
+
+}
+
+input.gidInput {
+	width: 100px;
+	padding: 3px;
+}
