@@ -1,0 +1,19 @@
+{
+  "name": "minesweepers_client",
+  "version": "0.0.0",
+  "authors": [
+    "roobingood <a.robingood@gmail.com>"
+  ],
+  "description": "minesweeper multiplayer",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
