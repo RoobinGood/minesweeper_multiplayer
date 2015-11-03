@@ -1,0 +1,16 @@
+<table id="mapTable">
+	<tbody>
+		{{#each layers.opened}}
+		<tr data-y={{@index}}>
+			{{#each this}}
+				<td data-x={{@index}}>
+					<div>
+						
+					</div>	
+				</td>
+			{{/each}}
+		</tr>
+		{{/each}}
+	</tbody>
+</table>
+<div bindcheck="null"></div>

@@ -1,6 +1,7 @@
 define("js/gameController",
-	["can", "js/prototypeController", "js/utils"],
-	function(can, PrototypeController, utils) {
+	["can", "js/prototypeController", "js/utils", 
+	"js/mapController"],
+	function(can, PrototypeController, utils, MapController) {
 
 	var GameController = PrototypeController.extend({
 		defaults: {
@@ -8,14 +9,36 @@ define("js/gameController",
 		}
 	}, {
 		init: function(element, options) {
+			var self = this;
+			self.element = element;
+
 			element.html(can.view(options.view));
+
+			$(element).fadeIn(150);
+
+			self.map = new MapController("#map", {
+				xCount: 10,
+				yCount: 8,
+				mineCount: 10,
+				onClick: self.onClick,
+				onCheck: self.onCheck,
+			});
 		},
 		".leaveButton click": function(el, event) {
-			this.destroy();
-			this.options.createPage("login");
+			var self = this;
+			$(self.element).fadeOut(150, function() {
+				self.destroy();
+				self.options.createPage("login");
+			});
 		},
 		".gidButton click": function(el, event) {
 			utils.clip("GID");
+		},
+		onClick: function(x, y) {
+			console.log("click", x, y);
+		}, 
+		onCheck: function(x, y) {
+			console.log("check", x, y);
 		},
 	});
 

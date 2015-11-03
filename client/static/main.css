@@ -1,6 +1,10 @@
-body, p, a, div, input {
+body, p, a, div, input, tr, td {
 	padding: 0;
 	margin: 0;
+}
+
+html {
+	background-color: #fafafa;
 }
 
 #out {
@@ -9,6 +13,7 @@ body, p, a, div, input {
 }
 
 .box {
+	background-color: #fff;
 	text-align: center;
 	border: 1px solid #444;
 
@@ -39,6 +44,7 @@ body, p, a, div, input {
 
 .gameBox {
 	min-width: 50%;
+	top: 20%;
 }
 
 .info > div {
@@ -73,4 +79,17 @@ a.button:hover {
 input.gidInput {
 	width: 100px;
 	padding: 3px;
+}
+
+table#mapTable {
+	border: 1px solid #444;
+	border-spacing: 0;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#mapTable td > div {
+	border: 1px solid #444;
+	width: 20px;
+	height: 20px;
 }

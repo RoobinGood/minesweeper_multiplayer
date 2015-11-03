@@ -8,12 +8,16 @@ define("js/loginController",
 		}
 	}, {
 		init: function(element, options) {
-			console.log(element, options);
+			this.element = element;
 			element.html(can.view(options.view));
+			$(element).fadeIn(150);
 		},
 		".newGameButton click": function(el, event) {
-			this.destroy();
-			this.options.createPage("game");
+			var self = this;
+			$(self.element).fadeOut(150, function() {
+				self.destroy();
+				self.options.createPage("game");
+			});
 		},
 	});
 
