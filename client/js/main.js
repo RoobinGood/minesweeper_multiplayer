@@ -9,6 +9,7 @@ require(
 			uid: undefined,
 			gid: undefined,
 			ws: undefined,
+			onMessageHandlers: {},
 		});
 
 		var createPage = function(pageName) {
@@ -25,5 +26,29 @@ require(
 			}
 		};
 
-		createPage("login");
+		var socket = new WebSocket("ws://localhost:8081");
+		localOptions.attr("ws", socket);
+
+		socket.onopen = function(event) {
+			createPage("login");
+
+			localOptions.attr("onMessageHandlers.login", 
+				function(data) {
+					localOptions.attr("uid", data.uid);
+					console.log("uid", localOptions.attr("uid"));
+			});
+
+			socket.send(JSON.stringify({
+				"type": "login",
+			}));
+		};
+
+		socket.onmessage = function(message) {
+			var messageObj = JSON.parse(message.data);
+			console.log(messageObj.type);
+
+			var handler = localOptions.attr("onMessageHandlers")[messageObj.type];
+			handler && handler(messageObj.data);
+		}
+		
 });

@@ -42,7 +42,7 @@ define("js/mapController",
 				}
 			}
 
-			console.log(self.map);
+			// console.log(self.map);
 
 			can.view.attr("bindcheck", function(el) {
 				$(el).prev().find("td").on("contextmenu", function(cellEl) {
@@ -54,8 +54,6 @@ define("js/mapController",
 			});
    			
 			element.html(can.view(options.view, self.map));
-
-
 		},
 		"td click": function(el, event) {
 			var coordinates = this.getCoordinates(el);

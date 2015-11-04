@@ -14,6 +14,9 @@ define("js/loginController",
 		},
 		".newGameButton click": function(el, event) {
 			var self = this;
+
+			// wh: write newgame handler
+
 			$(self.element).fadeOut(150, function() {
 				self.destroy();
 				self.options.createPage("game");
