@@ -1,6 +1,7 @@
 body, p, a, div, input, tr, td {
 	padding: 0;
 	margin: 0;
+	font-family: "Helvetica Neue", Helvetica;
 }
 
 html {
@@ -19,9 +20,6 @@ html {
 
 	position: absolute;
 	top: 40%;
-	transform: translateY(-50%);
-	webkit-transform: translateY(-50%);
-	-ms-transform: translateY(-50%);
 	margin: 0px;
 
 	left: 50%;

@@ -69,7 +69,7 @@ define("js/mapController",
 			}
 		},
 		apply: function() {
-			
+			this.element.html(can.view(this.options.view, this.map));
 		},
 
 	});

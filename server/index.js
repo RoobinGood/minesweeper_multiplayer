@@ -65,6 +65,7 @@ onMessageHandlers = {
 		if (games[data.gid]) {
 
 			games[data.gid].users.push(client.uid);
+			console.log(games[data.gid].users);
 
 			client.ws.send(JSON.stringify({
 				"type": "join",
@@ -81,6 +82,27 @@ onMessageHandlers = {
 				}
 			}));
 		}
+	},
+	click: function(client, data) {
+		var game = games[data.gid];
+		if (game) {
+			var x = data.coordinates.x;
+			var y = data.coordinates.y;
+			var tip = game.map.layers.tips[y][x];
 
+			var users = game.users;
+			for (var id in users) {
+				clients[users[id]].ws.send(JSON.stringify({
+					"type": "opencells",
+					"data": {
+						"cells": {
+							"x": x, 
+							"y": y, 
+							"tip": tip,
+						}
+					},
+				}))
+			}
+		}
 	}
 };

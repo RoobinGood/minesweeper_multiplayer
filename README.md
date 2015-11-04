@@ -91,7 +91,11 @@ data: {
 type: "newgame",
 data: {
 	uid
-	properties: [xCount, yCount, mineCount]
+	properties: {
+		xCount, 
+		yCount, 
+		mineCount
+	}
 }
 ```
 ####Server response? Server send gid and then user send join
@@ -117,7 +121,11 @@ data: {
 type: "join"
 data: {
 	result: boolean
-	*properties: [xCount, yCount, mineCount]
+	*properties: {
+		xCount, 
+		yCount, 
+		mineCount
+	}
 }
 ```
 
@@ -128,7 +136,7 @@ type: "click",
 data: {
 	uid
 	gid
-	[x,y]
+	coordinates: {x,y}
 }
 ```
 ####Server response?
@@ -147,7 +155,7 @@ data: {
 	uid
 	gid
 	checkState: boolean
-	[x,y]
+	coordinates: {x,y}
 }
 ```
 ####Server response?
@@ -173,7 +181,7 @@ data: {
 ```
 type: "opencells"
 data: {
-	cells: [[x, y, tip]]
+	cells: [{x, y, tip}]
 }
 ```
 
@@ -183,7 +191,7 @@ data: {
 type: "checkcell"
 data: {
 	checkState: boolean
-	cells: [x, y]
+	cells: {x, y}
 }
 ```
 

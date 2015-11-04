@@ -20,8 +20,18 @@ define("js/gameController",
 				xCount: self.options.properties.xCount,
 				yCount: self.options.properties.yCount,
 				mineCount: self.options.properties.mineCount,
-				onClick: self.onClick,
-				onCheck: self.onCheck,
+				onClick: function() {
+					self.onClick.apply(self, arguments);
+				},
+				onCheck: function() {
+					self.onCheck.apply(self, arguments);
+				},
+			});
+
+			self.options.localOptions.attr("onMessageHandlers.opencells", function(data) {
+				console.log(data);
+				self.map.map.attr("layers.opened")[data.cells.y][data.cells.x] = true;
+				self.map.apply();
 			});
 		},
 		".leaveButton click": function(el, event) {
@@ -36,6 +46,19 @@ define("js/gameController",
 		},
 		onClick: function(x, y) {
 			console.log("click", x, y);
+			var localOptions = this.options.localOptions;
+
+			localOptions.attr("ws").send(JSON.stringify({
+				"type": "click",
+				"data": {
+					"gid": localOptions.attr("gid"),
+					"uid": localOptions.attr("uid"),
+					"coordinates": {
+						"x": x,
+						"y": y,
+					}
+				}
+			}));
 		}, 
 		onCheck: function(x, y) {
 			console.log("check", x, y);
