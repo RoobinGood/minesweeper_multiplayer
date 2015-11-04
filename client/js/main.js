@@ -12,17 +12,17 @@ require(
 			onMessageHandlers: {},
 		});
 
-		var createPage = function(pageName) {
+		var createPage = function(pageName, data) {
+			var pageData = {
+				createPage: createPage,
+				localOptions: localOptions,
+			};
+			data && $.extend(pageData, data);
+			console.log("extended data", pageData);
 			if (pageName === "game") {
-				self.currentController = new GameController("#out", {
-					createPage: createPage,
-					localOptions: localOptions,
-				});
+				self.currentController = new GameController("#out", pageData);
 			} else if (pageName === "login") {
-				self.currentController = new LoginController("#out", {
-					createPage: createPage,
-					localOptions: localOptions,
-				});
+				self.currentController = new LoginController("#out", pageData);
 			}
 		};
 

@@ -48,7 +48,7 @@ onMessageHandlers = {
 		var gid = _.random(100500);
 
 		games[gid] = {
-			map: {},
+			map: new Map(data.properties),
 			users: [],
 		}
 
@@ -70,6 +70,7 @@ onMessageHandlers = {
 				"type": "join",
 				"data": {
 					"result": true,
+					"properties": games[data.gid].map.properties,
 				}
 			}));
 		} else {

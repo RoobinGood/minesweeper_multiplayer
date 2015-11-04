@@ -16,7 +16,7 @@ define("js/loginController",
 
 			self.options.localOptions.attr("onMessageHandlers.newgame", 
 				function(data) {
-					console.log(data);
+					// console.log(data);
 					if (data.result) {
 						self.options.localOptions.attr("gid", data.gid);
 						self.joinGame(); 
@@ -26,8 +26,9 @@ define("js/loginController",
 			});
 			self.options.localOptions.attr("onMessageHandlers.join", 
 				function(data) {
+					console.log(data);
 					if (data.result) {
-						self.startNewGame();
+						self.startNewGame(data.properties);
 					} else {
 						alert("There is now game with that GameID");
 					}
@@ -40,6 +41,11 @@ define("js/loginController",
 				"type": "newgame",
 				"data": {
 					"uid": self.options.localOptions.attr("uid"),
+					"properties": {
+						"xCount": 15,
+						"yCount": 10,
+						"mineCount": 20,
+					}
 				}
 			}));
 
@@ -70,12 +76,14 @@ define("js/loginController",
 				}
 			}))
 		},
-		startNewGame: function() {
+		startNewGame: function(gameProperties) {
 			var self = this;
 
 			$(self.element).fadeOut(150, function() {
 				self.destroy();
-				self.options.createPage("game");
+				self.options.createPage("game", {
+					properties: gameProperties,
+				});
 			});
 		},
 	});

@@ -85,7 +85,7 @@ data: {
 }
 ```
 
-###Start
+###NewGame
 ####Client request
 ```
 type: "newgame",

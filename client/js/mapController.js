@@ -68,6 +68,9 @@ define("js/mapController",
 				y: y
 			}
 		},
+		apply: function() {
+			
+		},
 
 	});
 

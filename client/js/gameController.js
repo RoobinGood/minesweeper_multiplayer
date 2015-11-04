@@ -17,9 +17,9 @@ define("js/gameController",
 			$(element).fadeIn(150);
 
 			self.map = new MapController("#map", {
-				xCount: 10,
-				yCount: 8,
-				mineCount: 10,
+				xCount: self.options.properties.xCount,
+				yCount: self.options.properties.yCount,
+				mineCount: self.options.properties.mineCount,
 				onClick: self.onClick,
 				onCheck: self.onCheck,
 			});
