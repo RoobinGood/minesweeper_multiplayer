@@ -8,14 +8,70 @@ define("js/loginController",
 		}
 	}, {
 		init: function(element, options) {
-			this.element = element;
+			var self = this;
+
+			self.element = element;
 			element.html(can.view(options.view));
 			$(element).fadeIn(150);
+
+			self.options.localOptions.attr("onMessageHandlers.newgame", 
+				function(data) {
+					console.log(data);
+					if (data.result) {
+						self.options.localOptions.attr("gid", data.gid);
+						self.joinGame(); 
+					} else {
+						alert("Can't create new game");
+					}
+			});
+			self.options.localOptions.attr("onMessageHandlers.join", 
+				function(data) {
+					if (data.result) {
+						self.startNewGame();
+					} else {
+						alert("There is now game with that GameID");
+					}
+			});
 		},
 		".newGameButton click": function(el, event) {
 			var self = this;
 
-			// wh: write newgame handler
+			self.options.localOptions.attr("ws").send(JSON.stringify({
+				"type": "newgame",
+				"data": {
+					"uid": self.options.localOptions.attr("uid"),
+				}
+			}));
+
+		},
+		"input keyup": function(el, event) {
+			var KEY_ENTER = 13;
+
+			console.log(event);
+			if (event.keyCode === KEY_ENTER) {
+				var self = this;
+				var gid = $(el).val();
+
+				self.options.localOptions.attr("gid", gid);
+				self.joinGame();
+			}
+
+		},
+		joinGame: function() {
+			var self = this;
+			var gid = self.options.localOptions.attr("gid");
+			var ws = self.options.localOptions.attr("ws");
+
+			ws.send(JSON.stringify({
+				"type": "join",
+				"data": {
+					"uid": self.options.localOptions.attr("uid"),
+					"gid": self.options.localOptions.attr("gid"),
+				}
+			}))
+		},
+		startNewGame: function() {
+			var self = this;
 
 			$(self.element).fadeOut(150, function() {
 				self.destroy();

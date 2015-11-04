@@ -45,7 +45,7 @@ require(
 
 		socket.onmessage = function(message) {
 			var messageObj = JSON.parse(message.data);
-			console.log(messageObj.type);
+			console.log("Received", messageObj.type);
 
 			var handler = localOptions.attr("onMessageHandlers")[messageObj.type];
 			handler && handler(messageObj.data);

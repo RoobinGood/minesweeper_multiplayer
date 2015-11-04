@@ -88,15 +88,15 @@ data: {
 ###Start
 ####Client request
 ```
-type: "start",
+type: "newgame",
 data: {
 	uid
 	properties: [xCount, yCount, mineCount]
 }
 ```
-####Server response
+####Server response? Server send gid and then user send join
 ```
-type: "start"
+type: "newgame"
 data: {
 	result: boolean
 	*gid
