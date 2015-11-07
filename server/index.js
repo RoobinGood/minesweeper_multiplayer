@@ -33,6 +33,19 @@ webSocketServer.on('connection', function(ws) {
 });
 
 
+var sendGameInfo = function(game) {
+	var infoMessage = JSON.stringify({
+		"type": "gameinfo",
+		"data": {
+			"usercount": game.users.length,
+		},
+	});
+	var users = game.users;
+	for (var id in users) {
+		clients[users[id]].ws.send(infoMessage)
+	}
+}
+
 onMessageHandlers = {
 	login: function(client, data) {
 		// client.ws
@@ -61,19 +74,20 @@ onMessageHandlers = {
 		}));
 	},
 	join: function(client, data) {
-		
-		if (games[data.gid]) {
-
-			games[data.gid].users.push(client.uid);
-			console.log(games[data.gid].users);
+		var game = games[data.gid]
+		if (game) {
+			game.users.push(client.uid);
+			console.log(game.users);
 
 			client.ws.send(JSON.stringify({
 				"type": "join",
 				"data": {
 					"result": true,
-					"properties": games[data.gid].map.properties,
+					"properties": game.map.properties,
 				}
 			}));
+
+			sendGameInfo(game);
 		} else {
 			client.ws.send(JSON.stringify({
 				"type": "join",
@@ -88,20 +102,43 @@ onMessageHandlers = {
 		if (game) {
 			var x = data.coordinates.x;
 			var y = data.coordinates.y;
-			var tip = game.map.layers.tips[y][x];
+
+			var message;
+			// console.log("mine:", game.map.layers.mines[y][x]);
+			if (game.map.layers.mines[y][x]) {
+				message = JSON.stringify({
+					"type": "endgame",
+					"data": {
+					    "result": false,
+					    "mine": {
+					    	"x": x,
+					    	"y": y,
+					    }
+					},
+				});
+			} else {
+				var openedCells;
+				if (game.map.layers.tips[y][x] > 0) {
+					openedCells = [{
+						"x": x, 
+						"y": y, 
+						"tip": game.map.layers.tips[y][x],
+					}];
+				} else {
+					openedCells = game.map.openArea(x, y);
+				}
+
+				message = JSON.stringify({
+					"type": "opencells",
+					"data": {
+						"cells": openedCells,
+					},
+				});
+			}
 
 			var users = game.users;
 			for (var id in users) {
-				clients[users[id]].ws.send(JSON.stringify({
-					"type": "opencells",
-					"data": {
-						"cells": {
-							"x": x, 
-							"y": y, 
-							"tip": tip,
-						}
-					},
-				}))
+				clients[users[id]].ws.send(message)
 			}
 		}
 	}

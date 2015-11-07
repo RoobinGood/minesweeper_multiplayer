@@ -22,23 +22,21 @@ define("js/mapController",
 					flaged: 0,
 				},
 				layers: {
-					mines: [],
-					tips: [],
-					opened: [],
+					openedTips: [],
 					flaged: [],
 				},
 			});
 
 			for (var i=0; i<self.map.properties.yCount; i++) {
-				self.map.attr("layers.mines").push([]);
-				self.map.attr("layers.opened").push([]);
+				self.map.attr("layers.openedTips").push([]);
 				self.map.attr("layers.flaged").push([]);
-				self.map.attr("layers.tips").push([]);
 				for (var j=0; j<self.map.properties.xCount; j++) {
-					self.map.attr("layers.mines")[i].push(false);
-					self.map.attr("layers.opened")[i].push(false);
+					self.map.attr("layers.openedTips")[i].push({
+						opened: false,
+						tip: undefined,
+						className: undefined,
+					});
 					self.map.attr("layers.flaged")[i].push(false);
-					self.map.attr("layers.tips")[i].push(0);
 				}
 			}
 
@@ -48,8 +46,11 @@ define("js/mapController",
 				$(el).prev().find("td").on("contextmenu", function(cellEl) {
 					cellEl.preventDefault();
 					var coordinates = self.getCoordinates(cellEl.currentTarget);
-					self.options.onCheck(coordinates.x, coordinates.y);
+					if (!self.map.layers.openedTips
+							[coordinates.y][coordinates.x].opened) {
 
+						self.options.onCheck(coordinates.x, coordinates.y);
+					}
 				})
 			});
    			
@@ -57,7 +58,11 @@ define("js/mapController",
 		},
 		"td click": function(el, event) {
 			var coordinates = this.getCoordinates(el);
-			this.options.onClick(coordinates.x, coordinates.y);
+			if (!this.map.layers.openedTips
+					[coordinates.y][coordinates.x].opened) {
+
+				this.options.onClick(coordinates.x, coordinates.y);
+			}
 		},
 		getCoordinates: function(el) {
 			var x = $(el).data("x");
@@ -69,7 +74,7 @@ define("js/mapController",
 			}
 		},
 		apply: function() {
-			this.element.html(can.view(this.options.view, this.map));
+			// this.element.html(can.view(this.options.view, this.map));
 		},
 
 	});

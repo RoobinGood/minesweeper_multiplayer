@@ -1,18 +1,22 @@
 <table id="mapTable">
 	<tbody>
-		{{#each layers.opened}}
+		{{#each layers.openedTips}}
 		<tr data-y={{@index}}>
 			{{#each this}}
 				<td data-x={{@index}}>
-					<div>
-						{{#if .}}
-							x
-						{{/if}}
-					</div>	
+					{{#if opened}}
+						<div class="{{className}}">
+								<p>{{tip}}</p>
+						</div>	
+					{{/if}}
+					{{^if opened}}
+						<div></div>
+					{{/if}}
 				</td>
 			{{/each}}
 		</tr>
 		{{/each}}
+		<tr getcellvalues="null" style="display: none"></div>
 	</tbody>
 </table>
 <div bindcheck="null"></div>

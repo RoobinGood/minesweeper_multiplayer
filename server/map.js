@@ -62,5 +62,50 @@ Map.prototype.generateTipsMap = function() {
 	}
 }
 
+Map.prototype.openArea = function(initialX, initialY) {
+	var self = this;
+	var openedList = [];
+
+	var expandOpenArea = function(x, y) {
+		// console.log("expand", x, y);
+		for (var k = x===0 ? x : x-1; k<self.properties.xCount && k<=x+1; k++) {
+			// console.log("x:", k);
+			for (var l = y===0 ? y : y-1; l<self.properties.yCount && l<=y+1; l++) {
+				// console.log(k, l, !self.layers.opened[l][k]);
+				if (!self.layers.opened[l][k]) {
+					self.layers.opened[l][k] = true;
+					openedList.push({
+						x: k,
+						y: l,
+						tip: self.layers.tips[l][k],
+					});
+					if (self.layers.tips[l][k] === 0) {
+						expandOpenArea(k, l);
+					}
+				}
+			}
+		} 
+	};
+
+	expandOpenArea(initialX, initialY);
+	return openedList;
+}
+
 
 module.exports = Map;
+
+var test_openArea = function() {
+	var testMap = new Map({
+		xCount: 3, 
+		yCount: 3, 
+		mineCount: 0});
+	testMap.layers.mines[2][2] = true;
+	testMap.generateTipsMap();
+	
+	console.log(testMap.layers.tips);
+
+	console.log(testMap.openArea(0, 0));
+	console.log(testMap.layers.opened);
+};
+
+// test_openArea();

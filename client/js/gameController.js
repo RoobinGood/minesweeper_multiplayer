@@ -12,7 +12,7 @@ define("js/gameController",
 			var self = this;
 			self.element = element;
 
-			element.html(can.view(options.view));
+			element.html(can.view(options.view, self.options.localOptions));
 
 			$(element).fadeIn(150);
 
@@ -30,8 +30,32 @@ define("js/gameController",
 
 			self.options.localOptions.attr("onMessageHandlers.opencells", function(data) {
 				console.log(data);
-				self.map.map.attr("layers.opened")[data.cells.y][data.cells.x] = true;
-				self.map.apply();
+
+				data.cells.forEach(function(el) {
+					var className = (el.tip < 3) ? "lowWarn" :
+						(el.tip < 5) ? "midWarn" :
+						"hiWarn";
+					self.map.map.attr("layers.openedTips")
+						[el.y][el.x].attr({
+							tip: el.tip,
+							className: className,
+							opened: true
+						});
+				});
+			});
+			self.options.localOptions.attr("onMessageHandlers.endgame", function(data) {
+				console.log(data);
+
+				if (data.result) {
+					alert("YOU WIN!");
+				} else {
+					self.map.map.attr("layers.openedTips")
+						[data.mine.y][data.mine.x].attr({
+							tip: "M",
+							className: "mine",
+							opened: true
+						});
+				}
 			});
 		},
 		".leaveButton click": function(el, event) {
@@ -42,7 +66,7 @@ define("js/gameController",
 			});
 		},
 		".gidButton click": function(el, event) {
-			utils.clip("GID");
+			utils.clip(this.options.localOptions.attr("gid"));
 		},
 		onClick: function(x, y) {
 			console.log("click", x, y);

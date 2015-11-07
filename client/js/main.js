@@ -26,29 +26,40 @@ require(
 			}
 		};
 
-		var socket = new WebSocket("ws://localhost:8081");
-		localOptions.attr("ws", socket);
+		try {
+			var socket = new WebSocket("ws://localhost:8081");
+			localOptions.attr("ws", socket);
 
-		socket.onopen = function(event) {
-			createPage("login");
+			socket.onopen = function(event) {
+				createPage("login");
 
-			localOptions.attr("onMessageHandlers.login", 
-				function(data) {
-					localOptions.attr("uid", data.uid);
-					console.log("uid", localOptions.attr("uid"));
-			});
+				localOptions.attr("onMessageHandlers.login", 
+					function(data) {
+						localOptions.attr("uid", data.uid);
+						console.log("uid", localOptions.attr("uid"));
+				});
+				localOptions.attr("onMessageHandlers.gameinfo", 
+					function(data) {
+						localOptions.attr("userCount", data.usercount);
+						console.log("userCount", localOptions.attr("userCount"));
+				});
 
-			socket.send(JSON.stringify({
-				"type": "login",
-			}));
-		};
+				socket.send(JSON.stringify({
+					"type": "login",
+				}));
+			};
 
-		socket.onmessage = function(message) {
-			var messageObj = JSON.parse(message.data);
-			console.log("Received", messageObj.type);
+			socket.onmessage = function(message) {
+				var messageObj = JSON.parse(message.data);
+				console.log("Received", messageObj.type);
 
-			var handler = localOptions.attr("onMessageHandlers")[messageObj.type];
-			handler && handler(messageObj.data);
+				var handler = localOptions.attr("onMessageHandlers")[messageObj.type];
+				handler && handler(messageObj.data);
+			}
+		} catch (err) {
+			console.log("error", err);
+			$("#out").html(["<div style=\"padding: 20px\"><h1>:'(</h1><br>",
+				"<h3>You browser doesn't support websockets<h3></div>"].join(""));
 		}
 		
 });

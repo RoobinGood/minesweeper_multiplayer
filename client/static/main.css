@@ -91,3 +91,23 @@ table#mapTable {
 	width: 20px;
 	height: 20px;
 }
+
+.lowWarn {
+	background-color: #C1FF80;
+}
+
+.midWarn {
+	background-color: #FFFC80;
+}
+
+.hiWarn {
+	background-color: #FFC280;
+}
+
+.mine {
+	background-color: #FF8080;
+}
+
+.flag {
+	background-color: #8094FF;
+}
