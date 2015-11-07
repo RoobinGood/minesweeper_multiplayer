@@ -8,8 +8,29 @@ require(
 		var localOptions = new can.Map({
 			uid: undefined,
 			gid: undefined,
+
+			gameInfo: {
+				userCount: undefined,
+				gameState: false,
+			},
+			
 			ws: undefined,
 			onMessageHandlers: {},
+			messageQueue: [],
+			setHandler: undefined,
+		});
+
+		localOptions.attr("setHandler", function(type, handler) {
+			localOptions.attr(["onMessageHandlers", type].join("."), handler);
+
+			// handle received messages
+			var len = localOptions.attr("messageQueue").length;
+			for (var i=len-1; i>=0; i--) {
+				if (localOptions.attr("messageQueue")[i].type === type) {
+					handler(localOptions.attr("messageQueue")[i].data);
+					localOptions.attr("messageQueue").splice(i, 1);
+				}
+			}	
 		});
 
 		var createPage = function(pageName, data) {
@@ -18,7 +39,7 @@ require(
 				localOptions: localOptions,
 			};
 			data && $.extend(pageData, data);
-			console.log("extended data", pageData);
+			// console.log("extended data", pageData);
 			if (pageName === "game") {
 				self.currentController = new GameController("#out", pageData);
 			} else if (pageName === "login") {
@@ -33,12 +54,12 @@ require(
 			socket.onopen = function(event) {
 				createPage("login");
 
-				localOptions.attr("onMessageHandlers.login", 
+				localOptions.attr("setHandler")("login", 
 					function(data) {
 						localOptions.attr("uid", data.uid);
 						console.log("uid", localOptions.attr("uid"));
 				});
-				localOptions.attr("onMessageHandlers.gameinfo", 
+				localOptions.attr("setHandler")("gameinfo", 
 					function(data) {
 						localOptions.attr("userCount", data.usercount);
 						console.log("userCount", localOptions.attr("userCount"));
@@ -51,10 +72,14 @@ require(
 
 			socket.onmessage = function(message) {
 				var messageObj = JSON.parse(message.data);
-				console.log("Received", messageObj.type);
+				console.log("Received", messageObj.type, messageObj.data);
 
 				var handler = localOptions.attr("onMessageHandlers")[messageObj.type];
-				handler && handler(messageObj.data);
+				if (handler) {
+					handler(messageObj.data);
+				} else {
+					localOptions.attr("messageQueue").push(messageObj);
+				}
 			}
 		} catch (err) {
 			console.log("error", err);

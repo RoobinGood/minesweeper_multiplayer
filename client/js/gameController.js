@@ -11,10 +11,10 @@ define("js/gameController",
 		init: function(element, options) {
 			var self = this;
 			self.element = element;
-
+			self.options.localOptions.attr("gameInfo.gameState", true);
 			element.html(can.view(options.view, self.options.localOptions));
 
-			$(element).fadeIn(150);
+			$(element).fadeIn(50);
 
 			self.map = new MapController("#map", {
 				xCount: self.options.properties.xCount,
@@ -28,9 +28,7 @@ define("js/gameController",
 				},
 			});
 
-			self.options.localOptions.attr("onMessageHandlers.opencells", function(data) {
-				console.log(data);
-
+			self.options.localOptions.attr("setHandler")("opencells", function(data) {
 				data.cells.forEach(function(el) {
 					var className = (el.tip < 3) ? "lowWarn" :
 						(el.tip < 5) ? "midWarn" :
@@ -44,17 +42,17 @@ define("js/gameController",
 						});
 				});
 			});
-			self.options.localOptions.attr("onMessageHandlers.check", function(data) {
-				console.log(data);
 
+			self.options.localOptions.attr("setHandler")("check", function(data) {
 				self.map.map.attr("layers.openedTips")
-					[data.coordinates.y][data.coordinates.x].attr("flaged", data.checkstate);
+					[data.coordinates.y][data.coordinates.x]
+					.attr("flaged", data.checkstate);
 				console.log(self.map.map.attr("layers.openedTips")
 					[data.coordinates.y][data.coordinates.x].attr("flaged"));
 			});
-			self.options.localOptions.attr("onMessageHandlers.endgame", function(data) {
-				console.log(data);
 
+			self.options.localOptions.attr("setHandler")("endgame", function(data) {
+				self.options.localOptions.attr("gameInfo.gameState", false);
 				if (data.result) {
 					alert("YOU WIN!");
 				} else {
@@ -70,7 +68,14 @@ define("js/gameController",
 		},
 		".leaveButton click": function(el, event) {
 			var self = this;
-			$(self.element).fadeOut(150, function() {
+			$(self.element).fadeOut(50, function() {
+				self.options.localOptions.attr("ws").send(JSON.stringify({
+					"type": "leave",
+					"data": {
+						"gid": self.options.localOptions.attr("gid"),
+						"uid": self.options.localOptions.attr("uid"),
+					}
+				}));
 				self.destroy();
 				self.options.createPage("login");
 			});
@@ -81,35 +86,37 @@ define("js/gameController",
 		onClick: function(x, y) {
 			console.log("click", x, y);
 			var localOptions = this.options.localOptions;
-
-			localOptions.attr("ws").send(JSON.stringify({
-				"type": "click",
-				"data": {
-					"gid": localOptions.attr("gid"),
-					"uid": localOptions.attr("uid"),
-					"coordinates": {
-						"x": x,
-						"y": y,
+			if (localOptions.attr("gameInfo.gameState")) {
+				localOptions.attr("ws").send(JSON.stringify({
+					"type": "click",
+					"data": {
+						"gid": localOptions.attr("gid"),
+						"uid": localOptions.attr("uid"),
+						"coordinates": {
+							"x": x,
+							"y": y,
+						}
 					}
-				}
-			}));
+				}));
+			}
 		}, 
 		onCheck: function(x, y, checkState) {
 			console.log("check", x, y);
 			var localOptions = this.options.localOptions;
-
-			localOptions.attr("ws").send(JSON.stringify({
-				"type": "check",
-				"data": {
-					"gid": localOptions.attr("gid"),
-					"uid": localOptions.attr("uid"),
-					"coordinates": {
-						"x": x,
-						"y": y,
-					},
-					"checkstate": checkState,
-				}
-			}));
+			if (localOptions.attr("gameInfo.gameState")) {
+				localOptions.attr("ws").send(JSON.stringify({
+					"type": "check",
+					"data": {
+						"gid": localOptions.attr("gid"),
+						"uid": localOptions.attr("uid"),
+						"coordinates": {
+							"x": x,
+							"y": y,
+						},
+						"checkstate": checkState,
+					}
+				}));
+			}
 		},
 	});
 

@@ -12,9 +12,9 @@ define("js/loginController",
 
 			self.element = element;
 			element.html(can.view(options.view));
-			$(element).fadeIn(150);
+			$(element).fadeIn(50);
 
-			self.options.localOptions.attr("onMessageHandlers.newgame", 
+			self.options.localOptions.attr("setHandler")("newgame", 
 				function(data) {
 					// console.log(data);
 					if (data.result) {
@@ -24,9 +24,9 @@ define("js/loginController",
 						alert("Can't create new game");
 					}
 			});
-			self.options.localOptions.attr("onMessageHandlers.join", 
+			self.options.localOptions.attr("setHandler")("join", 
 				function(data) {
-					console.log(data);
+					// console.log(data);
 					if (data.result) {
 						self.startNewGame(data.properties);
 					} else {
@@ -44,7 +44,7 @@ define("js/loginController",
 					"properties": {
 						"xCount": 15,
 						"yCount": 10,
-						"mineCount": 20,
+						"mineCount": 3,
 					}
 				}
 			}));
@@ -53,7 +53,7 @@ define("js/loginController",
 		"input keyup": function(el, event) {
 			var KEY_ENTER = 13;
 
-			console.log(event);
+			// console.log(event);
 			if (event.keyCode === KEY_ENTER) {
 				var self = this;
 				var gid = $(el).val();
@@ -79,7 +79,7 @@ define("js/loginController",
 		startNewGame: function(gameProperties) {
 			var self = this;
 
-			$(self.element).fadeOut(150, function() {
+			$(self.element).fadeOut(50, function() {
 				self.destroy();
 				self.options.createPage("game", {
 					properties: gameProperties,

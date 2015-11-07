@@ -28,7 +28,7 @@ var Map = function(properties) {
 
 	this.generateMineMap();
 	this.generateTipsMap();
-}
+};
 
 Map.prototype.generateMineMap = function() {
 	for (var i=0; i<this.properties.mineCount; i++) {
@@ -43,7 +43,7 @@ Map.prototype.generateMineMap = function() {
 			}
 		}
 	}
-}
+};
 
 // todo: rewrite - generate by mine map
 Map.prototype.generateTipsMap = function() {
@@ -51,8 +51,12 @@ Map.prototype.generateTipsMap = function() {
 		for (var y=0; y<this.properties.yCount; y++) {
 
 			var counter = 0;
-			for (var i = x===0 ? x : x-1; i<this.properties.xCount && i<=x+1; i++) {
-				for (var j = y===0 ? y : y-1; j<this.properties.yCount && j<=y+1; j++){
+			for (var i = x===0 ? x : x-1; 
+				i<this.properties.xCount && i<=x+1; i++) {
+
+				for (var j = y===0 ? y : y-1; 
+					j<this.properties.yCount && j<=y+1; j++){
+					
 					this.layers.mines[j][i] && counter++;
 				}
 			}
@@ -60,7 +64,7 @@ Map.prototype.generateTipsMap = function() {
 			this.layers.tips[y][x] = counter;
 		}
 	}
-}
+};
 
 Map.prototype.openArea = function(initialX, initialY) {
 	var self = this;
@@ -68,10 +72,12 @@ Map.prototype.openArea = function(initialX, initialY) {
 
 	var expandOpenArea = function(x, y) {
 		// console.log("expand", x, y);
-		for (var k = x===0 ? x : x-1; k<self.properties.xCount && k<=x+1; k++) {
-			// console.log("x:", k);
-			for (var l = y===0 ? y : y-1; l<self.properties.yCount && l<=y+1; l++) {
-				// console.log(k, l, !self.layers.opened[l][k]);
+		for (var k = x===0 ? x : x-1; 
+			k<self.properties.xCount && k<=x+1; k++) {
+
+			for (var l = y===0 ? y : y-1; 
+				l<self.properties.yCount && l<=y+1; l++) {
+
 				if (!self.layers.opened[l][k]) {
 					self.layers.opened[l][k] = true;
 					openedList.push({
@@ -89,23 +95,80 @@ Map.prototype.openArea = function(initialX, initialY) {
 
 	expandOpenArea(initialX, initialY);
 	return openedList;
-}
+};
 
+Map.prototype.serializeOpenedCells = function() {
+	var openedList = [];
+	for (var x=0; x<this.properties.xCount; x++) {
+		for (var y=0; y<this.properties.yCount; y++) {
+			if (this.layers.opened[y][x]) {
+				openedList.push({
+					"x": x, 
+					"y": y, 
+					"tip": this.layers.tips[y][x],
+				});
+			}
+		}
+	}
+	return openedList;
+};
+
+Map.prototype.checkWin = function() {
+	var freeCellsMaxCount = this.properties.xCount * this.properties.yCount -
+		this.properties.mineCount;
+	return this.counters.opened === freeCellsMaxCount;
+};
+
+Map.prototype.openCell = function(x, y) {
+	var openedCells = [];
+	if (this.layers.tips[y][x] > 0) {
+		openedCells.push({
+			"x": x, 
+			"y": y, 
+			"tip": this.layers.tips[y][x],
+		});
+	} else {
+		openedCells = this.openArea(x, y);
+	}
+
+	// todo: test on async game
+	this.counters.opened += openedCells.length;
+	return openedCells;
+};
 
 module.exports = Map;
+
 
 var test_openArea = function() {
 	var testMap = new Map({
 		xCount: 3, 
 		yCount: 3, 
 		mineCount: 0});
+	testMap.layers.mines[0][0] = true;
+	testMap.layers.mines[1][1] = true;
 	testMap.layers.mines[2][2] = true;
 	testMap.generateTipsMap();
 	
 	console.log(testMap.layers.tips);
-
-	console.log(testMap.openArea(0, 0));
+	console.log(testMap.openArea(0, 1));
 	console.log(testMap.layers.opened);
 };
 
+var test_serializeOpenedCells = function() {
+	var testMap = new Map({
+		xCount: 3, 
+		yCount: 3, 
+		mineCount: 0});
+	testMap.layers.mines[0][0] = true;
+	testMap.layers.mines[1][1] = true;
+	testMap.layers.mines[2][2] = true;
+	testMap.generateTipsMap();
+	testMap.openArea(0, 1);
+
+	console.log(testMap.layers.tips);
+	console.log(testMap.layers.opened);
+	console.log(testMap.serializeOpenedCells());
+};
+
 // test_openArea();
+// test_serializeOpenedCells();

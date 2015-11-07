@@ -33,18 +33,41 @@ webSocketServer.on('connection', function(ws) {
 });
 
 
+var sendBroadcastMessage = function(game, messageObj) {
+	var message = JSON.stringify(messageObj);
+	var users = game.users;
+	var disconnectedUsers = [];
+	for (var id in users) {
+		if (clients[users[id]]) {
+			clients[users[id]].ws.send(message);
+		} else {
+			disconnectedUsers.push(id);
+		}
+	}
+
+	if (disconnectedUsers.length > 0) {
+		for (var i = disconnectedUsers.length-1; i>=0; i--) {
+			users.splice(disconnectedUsers[i], 1);
+		}
+		sendGameInfo(game);
+	}
+};
+
+var sendGameResult = function(game) {
+	sendBroadcastMessage(game, {
+		"type": "endgame",
+		"data": game.result,
+	});
+};
+
 var sendGameInfo = function(game) {
-	var infoMessage = JSON.stringify({
+	sendBroadcastMessage(game, {
 		"type": "gameinfo",
 		"data": {
 			"usercount": game.users.length,
 		},
 	});
-	var users = game.users;
-	for (var id in users) {
-		clients[users[id]].ws.send(infoMessage)
-	}
-}
+};
 
 onMessageHandlers = {
 	login: function(client, data) {
@@ -63,6 +86,7 @@ onMessageHandlers = {
 		games[gid] = {
 			map: new Map(data.properties),
 			users: [],
+			state: true,
 		}
 
 		client.ws.send(JSON.stringify({
@@ -70,11 +94,11 @@ onMessageHandlers = {
 			"data": {
 				"gid": gid,
 				"result": true,
-			}
+ 			}
 		}));
 	},
 	join: function(client, data) {
-		var game = games[data.gid]
+		var game = games[data.gid];
 		if (game) {
 			game.users.push(client.uid);
 			console.log(game.users);
@@ -86,6 +110,20 @@ onMessageHandlers = {
 					"properties": game.map.properties,
 				}
 			}));
+
+			client.ws.send(JSON.stringify({
+				"type": "opencells",
+				"data": {
+					"cells": game.map.serializeOpenedCells(),
+				}
+			}));
+
+			if (!game.state) {
+				client.ws.send(JSON.stringify({
+					"type": "endgame",
+					"data": game.result,
+				}));
+			}
 
 			sendGameInfo(game);
 		} else {
@@ -99,52 +137,44 @@ onMessageHandlers = {
 	},
 	click: function(client, data) {
 		var game = games[data.gid];
-		if (game) {
+		if (game && game.state) {
 			var x = data.coordinates.x;
 			var y = data.coordinates.y;
 
-			var message;
 			// console.log("mine:", game.map.layers.mines[y][x]);
 			if (game.map.layers.mines[y][x]) {
-				message = JSON.stringify({
-					"type": "endgame",
-					"data": {
-					    "result": false,
-					    "mine": {
-					    	"x": x,
-					    	"y": y,
-					    }
+				game.state = false;
+				game.result = {
+					"result": false,
+					"mine": {
+						"x": x,
+				    	"y": y,
 					},
-				});
+				};
+				sendGameResult(game);
 			} else {
-				var openedCells;
-				if (game.map.layers.tips[y][x] > 0) {
-					openedCells = [{
-						"x": x, 
-						"y": y, 
-						"tip": game.map.layers.tips[y][x],
-					}];
-				} else {
-					openedCells = game.map.openArea(x, y);
-				}
-
-				message = JSON.stringify({
+				var messageObj = {
 					"type": "opencells",
 					"data": {
-						"cells": openedCells,
+						"cells": game.map.openCell(x, y),
 					},
-				});
+				};
+				sendBroadcastMessage(game, messageObj);
+
+				if (game.map.checkWin()) {
+					game.state = false;
+					game.result = {
+						"result": true,
+					};
+					sendGameResult(game);
+				}
 			}
 
-			var users = game.users;
-			for (var id in users) {
-				clients[users[id]].ws.send(message)
-			}
 		}
 	},
 	check: function(client, data) {
 		var game = games[data.gid];
-		if (game) {
+		if (game && game.state) {
 			var x = data.coordinates.x;
 			var y = data.coordinates.y;
 			var checkState = data.checkstate;
@@ -153,7 +183,7 @@ onMessageHandlers = {
 				game.map.layers.flaged[y][x] !== checkState) {
 
 				game.map.layers.flaged[y][x] = checkState;
-				var message = JSON.stringify({
+				var messageObj = {
 					"type": "check",
 					"data": {
 						"coordinates": {
@@ -162,15 +192,22 @@ onMessageHandlers = {
 						},
 						"checkstate": checkState,
 					}
-				});
+				};
 				
-				var users = game.users;
-				for (var id in users) {
-					clients[users[id]].ws.send(message);
-				}
+				sendBroadcastMessage(game, messageObj);
 			}
-
 		}
 	}, 
+	leave: function(client, data) {
+		var game = games[data.gid];
+		if (game) {
+			var ind = _.indexOf(game.users, client.uid);
+			if (ind !== -1) {
+				game.users.splice(ind, 1);
+				
+				sendGameInfo(game);
+			}
+		}
+	}
 
 };
