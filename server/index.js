@@ -141,5 +141,36 @@ onMessageHandlers = {
 				clients[users[id]].ws.send(message)
 			}
 		}
-	}
+	},
+	check: function(client, data) {
+		var game = games[data.gid];
+		if (game) {
+			var x = data.coordinates.x;
+			var y = data.coordinates.y;
+			var checkState = data.checkstate;
+
+			if (!game.map.layers.opened[y][x] && 
+				game.map.layers.flaged[y][x] !== checkState) {
+
+				game.map.layers.flaged[y][x] = checkState;
+				var message = JSON.stringify({
+					"type": "check",
+					"data": {
+						"coordinates": {
+							"x": x,
+							"y": y,
+						},
+						"checkstate": checkState,
+					}
+				});
+				
+				var users = game.users;
+				for (var id in users) {
+					clients[users[id]].ws.send(message);
+				}
+			}
+
+		}
+	}, 
+
 };

@@ -39,9 +39,18 @@ define("js/gameController",
 						[el.y][el.x].attr({
 							tip: el.tip,
 							className: className,
-							opened: true
+							opened: true,
+							flaged: false,
 						});
 				});
+			});
+			self.options.localOptions.attr("onMessageHandlers.check", function(data) {
+				console.log(data);
+
+				self.map.map.attr("layers.openedTips")
+					[data.coordinates.y][data.coordinates.x].attr("flaged", data.checkstate);
+				console.log(self.map.map.attr("layers.openedTips")
+					[data.coordinates.y][data.coordinates.x].attr("flaged"));
 			});
 			self.options.localOptions.attr("onMessageHandlers.endgame", function(data) {
 				console.log(data);
@@ -53,7 +62,8 @@ define("js/gameController",
 						[data.mine.y][data.mine.x].attr({
 							tip: "M",
 							className: "mine",
-							opened: true
+							opened: true,
+							flaged: false,
 						});
 				}
 			});
@@ -84,8 +94,22 @@ define("js/gameController",
 				}
 			}));
 		}, 
-		onCheck: function(x, y) {
+		onCheck: function(x, y, checkState) {
 			console.log("check", x, y);
+			var localOptions = this.options.localOptions;
+
+			localOptions.attr("ws").send(JSON.stringify({
+				"type": "check",
+				"data": {
+					"gid": localOptions.attr("gid"),
+					"uid": localOptions.attr("uid"),
+					"coordinates": {
+						"x": x,
+						"y": y,
+					},
+					"checkstate": checkState,
+				}
+			}));
 		},
 	});
 

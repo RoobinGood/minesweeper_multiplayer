@@ -10,8 +10,16 @@
 						</div>	
 					{{/if}}
 					{{^if opened}}
-						<div></div>
+						{{#if flaged}}
+							<div class="flag">
+								<p>C</p>
+							</div>	
+						{{/if}}
+						{{^if flaged}}
+							<div></div>
+						{{/if}}
 					{{/if}}
+
 				</td>
 			{{/each}}
 		</tr>

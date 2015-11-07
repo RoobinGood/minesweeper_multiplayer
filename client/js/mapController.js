@@ -23,20 +23,18 @@ define("js/mapController",
 				},
 				layers: {
 					openedTips: [],
-					flaged: [],
 				},
 			});
 
 			for (var i=0; i<self.map.properties.yCount; i++) {
 				self.map.attr("layers.openedTips").push([]);
-				self.map.attr("layers.flaged").push([]);
 				for (var j=0; j<self.map.properties.xCount; j++) {
 					self.map.attr("layers.openedTips")[i].push({
 						opened: false,
 						tip: undefined,
 						className: undefined,
+						flaged: false,
 					});
-					self.map.attr("layers.flaged")[i].push(false);
 				}
 			}
 
@@ -46,10 +44,10 @@ define("js/mapController",
 				$(el).prev().find("td").on("contextmenu", function(cellEl) {
 					cellEl.preventDefault();
 					var coordinates = self.getCoordinates(cellEl.currentTarget);
-					if (!self.map.layers.openedTips
-							[coordinates.y][coordinates.x].opened) {
+					if (!self.map.layers.openedTips[coordinates.y][coordinates.x].opened) {
 
-						self.options.onCheck(coordinates.x, coordinates.y);
+						self.options.onCheck(coordinates.x, coordinates.y, 
+							!self.map.layers.openedTips[coordinates.y][coordinates.x].flaged);
 					}
 				})
 			});
@@ -58,8 +56,8 @@ define("js/mapController",
 		},
 		"td click": function(el, event) {
 			var coordinates = this.getCoordinates(el);
-			if (!this.map.layers.openedTips
-					[coordinates.y][coordinates.x].opened) {
+			if (!this.map.layers.openedTips[coordinates.y][coordinates.x].opened &&
+				!this.map.layers.openedTips[coordinates.y][coordinates.x].flaged) {
 
 				this.options.onClick(coordinates.x, coordinates.y);
 			}
@@ -73,10 +71,6 @@ define("js/mapController",
 				y: y
 			}
 		},
-		apply: function() {
-			// this.element.html(can.view(this.options.view, this.map));
-		},
-
 	});
 
 	return MapController;
