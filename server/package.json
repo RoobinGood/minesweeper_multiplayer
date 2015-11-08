@@ -1,0 +1,26 @@
+{
+  "name": "minesweeper_server",
+  "version": "1.0.0",
+  "description": "minesweeper server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RoobinGood/minesweeper_multiplayer.git"
+  },
+  "keywords": [
+    "minesweeper"
+  ],
+  "author": "roobingood",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RoobinGood/minesweeper_multiplayer/issues"
+  },
+  "homepage": "https://github.com/RoobinGood/minesweeper_multiplayer#readme",
+  "dependencies": {
+    "underscore": "^1.8.3",
+    "ws": "^0.8.0"
+  }
+}
