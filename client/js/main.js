@@ -12,6 +12,7 @@ require(
 			gameInfo: {
 				userCount: undefined,
 				gameState: false,
+				animationTime: 10,
 			},
 			
 			ws: undefined,

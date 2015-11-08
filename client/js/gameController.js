@@ -12,9 +12,16 @@ define("js/gameController",
 			var self = this;
 			self.element = element;
 			self.options.localOptions.attr("gameInfo.gameState", true);
+			self.options.localOptions.attr("gameInfo.openedCount", 0);
+			self.options.localOptions.attr("gameInfo.freeCount", 
+				self.options.properties.xCount * self.options.properties.yCount -
+				self.options.properties.mineCount);
+			self.options.localOptions.attr("gameInfo.flagedCount", 0);
+			self.options.localOptions.attr("gameInfo.mineCount", 
+				self.options.properties.mineCount);
 			element.html(can.view(options.view, self.options.localOptions));
 
-			$(element).fadeIn(50);
+			$(element).fadeIn(self.options.localOptions.attr("gameInfo.animationTime"));
 
 			self.map = new MapController("#map", {
 				xCount: self.options.properties.xCount,
@@ -41,6 +48,9 @@ define("js/gameController",
 							flaged: false,
 						});
 				});
+				self.options.localOptions.attr("gameInfo.openedCount", 
+					self.options.localOptions.attr("gameInfo.openedCount") + 
+					data.cells.length);
 			});
 
 			self.options.localOptions.attr("setHandler")("check", function(data) {
@@ -49,6 +59,13 @@ define("js/gameController",
 					.attr("flaged", data.checkstate);
 				// console.log(self.map.map.attr("layers.openedTips")
 				// 	[data.coordinates.y][data.coordinates.x].attr("flaged"));
+				if (data.checkstate) {
+					self.options.localOptions.attr("gameInfo.flagedCount", 
+						self.options.localOptions.attr("gameInfo.flagedCount") + 1);				
+				} else {
+					self.options.localOptions.attr("gameInfo.flagedCount", 
+						self.options.localOptions.attr("gameInfo.flagedCount") - 1);
+				}
 			});
 
 			self.options.localOptions.attr("setHandler")("endgame", function(data) {
@@ -64,18 +81,21 @@ define("js/gameController",
 							opened: true,
 							flaged: false,
 						});
+					self.options.localOptions.attr("gameInfo.openedCount", 
+						self.options.localOptions.attr("gameInfo.openedCount") + 1);
 				}
 				self.cleanGame();
 			});
 
 			self.options.localOptions.attr("setHandler")("join", 
 				function(data) {
-					$(self.element).fadeOut(50, function() {
-						self.cleanGame();
-						self.destroy();
-						self.options.createPage("game", {
-							properties: data.properties,
-						});
+					$(self.element).fadeOut(self.options.localOptions.attr("gameInfo.animationTime"), 
+						function() {
+							self.cleanGame();
+							self.destroyController();
+							self.options.createPage("game", {
+								properties: data.properties,
+							});
 					});
 			});
 		},
@@ -89,7 +109,7 @@ define("js/gameController",
 						"uid": self.options.localOptions.attr("uid"),
 					}
 				}));
-				self.destroy();
+				self.destroyController();
 				self.cleanGame();
 				self.options.createPage("login");
 			});
@@ -136,8 +156,7 @@ define("js/gameController",
 			this.options.localOptions.attr("setHandler")("opencells", undefined);
 			this.options.localOptions.attr("setHandler")("check", undefined);
 			this.options.localOptions.attr("setHandler")("endgame", undefined);
-			// this.options.localOptions.attr("setHandler")("join", undefined);
-			console.log("game cleaned");
+			// console.log("game cleaned");
 		},
 		"#endGameSplash click": function() {
 			var localOptions = this.options.localOptions;
@@ -149,6 +168,10 @@ define("js/gameController",
 				}
 			}));
 		},
+		destroyController: function() {
+			this.options.localOptions.attr("setHandler")("join", undefined);
+			this.destroy();
+		}
 	});
 
 	return GameController;

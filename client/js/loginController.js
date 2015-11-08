@@ -11,7 +11,7 @@ define("js/loginController",
 			var self = this;
 
 			self.element = element;
-			$(element).fadeIn();
+			$(element).fadeIn(self.options.localOptions.attr("gameInfo.animationTime"));
 			element.html(can.view(options.view));
 
 			self.options.localOptions.attr("setHandler")("newgame", 
@@ -79,14 +79,15 @@ define("js/loginController",
 		startNewGame: function(gameProperties) {
 			var self = this;
 
-			$(self.element).fadeOut(50, function() {
-				self.destroy();
-				self.options.localOptions.attr("setHandler")("join", undefined);
-				self.options.localOptions.attr("setHandler")("newgame", undefined);
+			$(self.element).fadeOut(self.options.localOptions.attr("gameInfo.animationTime"), 
+				function() {
+					self.destroy();
+					self.options.localOptions.attr("setHandler")("join", undefined);
+					self.options.localOptions.attr("setHandler")("newgame", undefined);
 
-				self.options.createPage("game", {
-					properties: gameProperties,
-				});
+					self.options.createPage("game", {
+						properties: gameProperties,
+					});
 			});
 		},
 	});
