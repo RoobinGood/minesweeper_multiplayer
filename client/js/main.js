@@ -61,7 +61,9 @@ require(
 		};
 
 		try {
-			var socket = new WebSocket("ws://localhost:8081");
+			var server = "devself.com:8081";
+			console.log("server:", server);
+			var socket = new WebSocket(["ws://", server].join(""));
 			localOptions.attr("ws", socket);
 
 			socket.onopen = function(event) {
