@@ -11,8 +11,8 @@ define("js/loginController",
 			var self = this;
 
 			self.element = element;
+			$(element).fadeIn();
 			element.html(can.view(options.view));
-			$(element).fadeIn(50);
 
 			self.options.localOptions.attr("setHandler")("newgame", 
 				function(data) {
@@ -44,7 +44,7 @@ define("js/loginController",
 					"properties": {
 						"xCount": 15,
 						"yCount": 10,
-						"mineCount": 3,
+						"mineCount": 15,
 					}
 				}
 			}));
@@ -81,6 +81,9 @@ define("js/loginController",
 
 			$(self.element).fadeOut(50, function() {
 				self.destroy();
+				self.options.localOptions.attr("setHandler")("join", undefined);
+				self.options.localOptions.attr("setHandler")("newgame", undefined);
+
 				self.options.createPage("game", {
 					properties: gameProperties,
 				});

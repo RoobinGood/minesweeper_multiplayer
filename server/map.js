@@ -127,6 +127,7 @@ Map.prototype.openCell = function(x, y) {
 			"y": y, 
 			"tip": this.layers.tips[y][x],
 		});
+		this.layers.opened[y][x] = true;
 	} else {
 		openedCells = this.openArea(x, y);
 	}
@@ -159,16 +160,17 @@ var test_serializeOpenedCells = function() {
 		xCount: 3, 
 		yCount: 3, 
 		mineCount: 0});
-	testMap.layers.mines[0][0] = true;
-	testMap.layers.mines[1][1] = true;
+	testMap.layers.mines[2][1] = true;
 	testMap.layers.mines[2][2] = true;
 	testMap.generateTipsMap();
-	testMap.openArea(0, 1);
+	testMap.openCell(0, 0);
 
 	console.log(testMap.layers.tips);
 	console.log(testMap.layers.opened);
 	console.log(testMap.serializeOpenedCells());
 };
 
-// test_openArea();
-// test_serializeOpenedCells();
+if (!module.parent) {
+	// test_openArea();
+	test_serializeOpenedCells();
+}

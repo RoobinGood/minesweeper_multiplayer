@@ -114,6 +114,7 @@ onMessageHandlers = {
 			client.ws.send(JSON.stringify({
 				"type": "opencells",
 				"data": {
+					"gid": data.gid,
 					"cells": game.map.serializeOpenedCells(),
 				}
 			}));
@@ -156,6 +157,7 @@ onMessageHandlers = {
 				var messageObj = {
 					"type": "opencells",
 					"data": {
+						"gid": data.gid,
 						"cells": game.map.openCell(x, y),
 					},
 				};

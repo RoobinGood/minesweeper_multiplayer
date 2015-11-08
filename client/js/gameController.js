@@ -54,7 +54,7 @@ define("js/gameController",
 			self.options.localOptions.attr("setHandler")("endgame", function(data) {
 				self.options.localOptions.attr("gameInfo.gameState", false);
 				if (data.result) {
-					alert("YOU WIN!");
+					// alert("YOU WIN!");
 				} else {
 					self.map.map.attr("layers.openedTips")
 						[data.mine.y][data.mine.x].attr({
@@ -64,6 +64,7 @@ define("js/gameController",
 							flaged: false,
 						});
 				}
+				self.cleanGame();
 			});
 		},
 		".leaveButton click": function(el, event) {
@@ -77,6 +78,7 @@ define("js/gameController",
 					}
 				}));
 				self.destroy();
+				self.cleanGame();
 				self.options.createPage("login");
 			});
 		},
@@ -118,6 +120,15 @@ define("js/gameController",
 				}));
 			}
 		},
+		cleanGame: function() {
+			this.options.localOptions.attr("setHandler")("opencells", undefined);
+			this.options.localOptions.attr("setHandler")("check", undefined);
+			this.options.localOptions.attr("setHandler")("endgame", undefined);
+			console.log("game cleaned");
+		},
+		showGameEnd: function() {
+			
+		}
 	});
 
 	return GameController;
