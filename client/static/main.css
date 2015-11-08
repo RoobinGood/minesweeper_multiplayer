@@ -6,6 +6,8 @@ body, p, a, div, input, tr, td {
 
 html {
 	background-color: #fafafa;
+	height: 100%;
+	width: 100%;
 }
 
 #out {
@@ -37,7 +39,9 @@ html {
 }
 
 .loginBox {
-	min-width: 40%;
+	/*min-width: 40%;*/
+	padding-left: 30px;
+	padding-right: 30px;
 }
 
 .gameBox {

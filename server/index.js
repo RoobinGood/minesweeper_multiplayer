@@ -114,7 +114,6 @@ onMessageHandlers = {
 			client.ws.send(JSON.stringify({
 				"type": "opencells",
 				"data": {
-					"gid": data.gid,
 					"cells": game.map.serializeOpenedCells(),
 				}
 			}));
@@ -168,7 +167,6 @@ onMessageHandlers = {
 				var messageObj = {
 					"type": "opencells",
 					"data": {
-						"gid": data.gid,
 						"cells": game.map.openCell(x, y),
 					},
 				};
@@ -221,6 +219,22 @@ onMessageHandlers = {
 				sendGameInfo(game);
 			}
 		}
-	}
+	},
+	restart: function(client, data) {
+		var game = games[data.gid];
+		if (game) {
+			var gameProperties = game.map.properties;
+			// console.log(gameProperties);
+			game.map = new Map(gameProperties);
+			game.state = true;
 
-};
+			sendBroadcastMessage(game, {
+				"type": "join",
+				"data": {
+					"result": true,
+					"properties": game.map.properties,
+				}
+			});
+		}
+	}
+}

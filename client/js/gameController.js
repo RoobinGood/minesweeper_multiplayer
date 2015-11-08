@@ -67,6 +67,17 @@ define("js/gameController",
 				}
 				self.cleanGame();
 			});
+
+			self.options.localOptions.attr("setHandler")("join", 
+				function(data) {
+					$(self.element).fadeOut(50, function() {
+						self.cleanGame();
+						self.destroy();
+						self.options.createPage("game", {
+							properties: data.properties,
+						});
+					});
+			});
 		},
 		".leaveButton click": function(el, event) {
 			var self = this;
@@ -125,7 +136,18 @@ define("js/gameController",
 			this.options.localOptions.attr("setHandler")("opencells", undefined);
 			this.options.localOptions.attr("setHandler")("check", undefined);
 			this.options.localOptions.attr("setHandler")("endgame", undefined);
+			// this.options.localOptions.attr("setHandler")("join", undefined);
 			console.log("game cleaned");
+		},
+		"#endGameSplash click": function() {
+			var localOptions = this.options.localOptions;
+			localOptions.attr("ws").send(JSON.stringify({
+				"type": "restart",
+				"data": {
+					"gid": localOptions.attr("gid"),
+					"uid": localOptions.attr("uid"),
+				}
+			}));
 		},
 	});
 
