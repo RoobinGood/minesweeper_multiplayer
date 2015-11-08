@@ -29,11 +29,13 @@
 					{{/if}}">
 					<p class="verticalAlign">
 						{{#if gameInfo.gameResult}}
-							<b>YOU WIN</b>
+							<b class="endGameResult">YOU WIN</b>
 						{{/if}}
 						{{^if gameInfo.gameResult}}
-							<b>YOU LOSE</b>
+							<b class="endGameResult">YOU LOSE</b>
 						{{/if}}
+						<br> 
+						<b>Click to retry</b> 
 					</p>
 				</div>
 			{{/if}}

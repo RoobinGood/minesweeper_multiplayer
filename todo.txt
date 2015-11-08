@@ -1,0 +1,6 @@
+- Choose map size
+- Fix synchronous win check
+- Choose server
+- Choose random game to join
+? Private game
+? Game list
