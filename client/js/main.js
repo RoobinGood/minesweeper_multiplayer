@@ -33,9 +33,9 @@ require(
 			if (handler) {
 				var len = localOptions.attr("messageQueue").length;
 				for (var i=len-1; i>=0; i--) {
-					if (localOptions.attr("messageQueue")[i].type === type && 
+					if (localOptions.attr("messageQueue")[i].type === type /*&& 
 						localOptions.attr("messageQueue")[i].data.gid === 
-							localOptions.attr("gid")) {
+							localOptions.attr("gid")*/) {
 
 						handler(localOptions.attr("messageQueue")[i].data);
 						// console.log(type, "handled");
@@ -91,7 +91,7 @@ require(
 					handler(messageObj.data);
 				} else {
 					localOptions.attr("messageQueue").push(messageObj);
-					console.log("")
+					console.log("Push to queue");
 				}
 			}
 		} catch (err) {

@@ -113,6 +113,21 @@ Map.prototype.serializeOpenedCells = function() {
 	return openedList;
 };
 
+Map.prototype.serializeFlagedCells = function() {
+	var flagedList = [];
+	for (var x=0; x<this.properties.xCount; x++) {
+		for (var y=0; y<this.properties.yCount; y++) {
+			if (this.layers.flaged[y][x]) {
+				flagedList.push({
+					"x": x, 
+					"y": y, 
+				});
+			}
+		}
+	}
+	return flagedList;
+};
+
 Map.prototype.checkWin = function() {
 	var freeCellsMaxCount = this.properties.xCount * this.properties.yCount -
 		this.properties.mineCount;

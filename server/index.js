@@ -119,6 +119,17 @@ onMessageHandlers = {
 				}
 			}));
 
+			var flagedCells = game.map.serializeFlagedCells();
+			flagedCells.forEach(function(el) {
+				client.ws.send(JSON.stringify({
+					"type": "check",
+					"data": {
+						"coordinates": el,
+						"checkstate": true,
+					}
+				}));
+			});
+
 			if (!game.state) {
 				client.ws.send(JSON.stringify({
 					"type": "endgame",

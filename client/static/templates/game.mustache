@@ -16,10 +16,26 @@
 				<b>0:0 / 0:0</b>
 			</div>
 		</div>
-		<div class="mapContainer">
+		<div id="mapContainer">
 			<div id="map"></div>
-			{{gameInfo.gameState}}
-			<div class="endGameSplash"></div>
+			{{^if gameInfo.gameState}}
+				<div id="endGameSplash" class="
+					{{#if gameInfo.gameResult}}
+						endGameWin
+					{{/if}}
+					{{^if gameInfo.gameResult}}
+						endGameLose
+					{{/if}}">
+					<p class="verticalAlign">
+						{{#if gameInfo.gameResult}}
+							<b>YOU WIN</b>
+						{{/if}}
+						{{^if gameInfo.gameResult}}
+							<b>YOU LOSE</b>
+						{{/if}}
+					</p>
+				</div>
+			{{/if}}
 		</div>
 	</div>
 </div>

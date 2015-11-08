@@ -47,12 +47,13 @@ define("js/gameController",
 				self.map.map.attr("layers.openedTips")
 					[data.coordinates.y][data.coordinates.x]
 					.attr("flaged", data.checkstate);
-				console.log(self.map.map.attr("layers.openedTips")
-					[data.coordinates.y][data.coordinates.x].attr("flaged"));
+				// console.log(self.map.map.attr("layers.openedTips")
+				// 	[data.coordinates.y][data.coordinates.x].attr("flaged"));
 			});
 
 			self.options.localOptions.attr("setHandler")("endgame", function(data) {
 				self.options.localOptions.attr("gameInfo.gameState", false);
+				self.options.localOptions.attr("gameInfo.gameResult", data.result);
 				if (data.result) {
 					// alert("YOU WIN!");
 				} else {
@@ -126,9 +127,6 @@ define("js/gameController",
 			this.options.localOptions.attr("setHandler")("endgame", undefined);
 			console.log("game cleaned");
 		},
-		showGameEnd: function() {
-			
-		}
 	});
 
 	return GameController;
