@@ -1,7 +1,19 @@
 <div class="box loginBox">
 	<div class="container">
-		<a class="button newGameButton">Create new game</a>
-		<br>
+		<div class="newGameButton">
+			<span class="button">
+				Create new game
+			</span>
+			{{#if showLogin}}
+			<div class="propertiesContainer">
+				<ul>
+				{{#each properties}}
+					<li {{data "data"}}>x: {{xCount}}, y: {{yCount}}, mines: {{mineCount}}</li>
+				{{/each}}
+				</ul>
+			</div>
+			{{/if}}
+		</div>
 		<br>
 		or
 		<br>

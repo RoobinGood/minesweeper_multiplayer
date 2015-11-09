@@ -46,7 +46,42 @@ html {
 
 .gameBox {
 	/*min-width: 50%;*/
-	top: 20%;
+	top: 5%;
+}
+
+.newGameButton {
+	padding: 0 30px;
+}
+
+.newGameButton {
+	position: relative;
+}
+
+.newGameButton * {
+	width: 100%;
+}
+
+.newGameButton > div {
+	position: absolute;
+	border: 1px solid #444;
+	z-index: 10;
+	margin-top: 5px;
+}
+
+.newGameButton ul {
+	list-style-type: none;
+    padding-left: 0;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.newGameButton li {
+    padding-bottom: 2px;
+    padding-top: 2px;
+    background-color: #fff;
+}
+.newGameButton li:hover {
+    background-color: #ddd;
 }
 
 .info > div {
@@ -62,7 +97,7 @@ html {
 	display: inline-block;
 }
 
-a.button {
+.button {
 	padding: 6px;
 	border: 1px solid #999;
 
@@ -73,7 +108,7 @@ a.button {
 	font-weight: bold;
 }
 
-a.button:hover {
+.button:hover {
 	background-color: #ddd;
 
 }

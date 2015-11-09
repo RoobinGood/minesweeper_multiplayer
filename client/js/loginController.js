@@ -11,8 +11,24 @@ define("js/loginController",
 			var self = this;
 
 			self.element = element;
+			self.loginOptions  = new can.Map({
+				showLogin: false,
+				properties: [{
+					"xCount": 15,
+					"yCount": 10,
+					"mineCount": 15,
+				}, {
+					"xCount": 20,
+					"yCount": 15,
+					"mineCount": 25,
+				}, {
+					"xCount": 30,
+					"yCount": 20,
+					"mineCount": 40,
+				}],
+			});
 			$(element).fadeIn(self.options.localOptions.attr("gameInfo.animationTime"));
-			element.html(can.view(options.view));
+			element.html(can.view(options.view, self.loginOptions));
 
 			self.options.localOptions.attr("setHandler")("newgame", 
 				function(data) {
@@ -34,21 +50,24 @@ define("js/loginController",
 					}
 			});
 		},
-		".newGameButton click": function(el, event) {
+		"li click": function(el, event) {
 			var self = this;
+			var properties = $(el).data().data;
 
 			self.options.localOptions.attr("ws").send(JSON.stringify({
 				"type": "newgame",
 				"data": {
 					"uid": self.options.localOptions.attr("uid"),
-					"properties": {
-						"xCount": 15,
-						"yCount": 10,
-						"mineCount": 15,
-					}
+					"properties": properties,
 				}
 			}));
 
+		},
+		".newGameButton mouseenter": function() {
+			this.loginOptions.attr("showLogin", true);
+		}, 
+		".newGameButton mouseleave": function() {
+			this.loginOptions.attr("showLogin", false);
 		},
 		"input keyup": function(el, event) {
 			var KEY_ENTER = 13;
