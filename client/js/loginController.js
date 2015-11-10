@@ -20,11 +20,11 @@ define("js/loginController",
 				}, {
 					"xCount": 20,
 					"yCount": 15,
-					"mineCount": 25,
+					"mineCount": 40,
 				}, {
 					"xCount": 30,
 					"yCount": 20,
-					"mineCount": 40,
+					"mineCount": 70,
 				}],
 			});
 			$(element).fadeIn(self.options.localOptions.attr("gameInfo.animationTime"));
@@ -50,7 +50,7 @@ define("js/loginController",
 					}
 			});
 		},
-		"li click": function(el, event) {
+		".newGameButton li click": function(el, event) {
 			var self = this;
 			var properties = $(el).data().data;
 

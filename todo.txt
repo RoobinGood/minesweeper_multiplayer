@@ -1,4 +1,4 @@
-- Choose map size
+* Choose map size
 - Fix synchronous win check
 - Clean old games on server
 - Choose server

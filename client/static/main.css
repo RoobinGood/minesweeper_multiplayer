@@ -21,7 +21,7 @@ html {
 	border: 1px solid #444;
 
 	position: absolute;
-	top: 40%;
+	top: 25%;
 	margin: 0px;
 
 	left: 50%;
@@ -50,7 +50,7 @@ html {
 }
 
 .newGameButton {
-	padding: 0 30px;
+	padding: 0;
 }
 
 .newGameButton {
@@ -59,6 +59,10 @@ html {
 
 .newGameButton * {
 	width: 100%;
+}
+
+.newGameButton > span {
+    padding: 6px 30px;
 }
 
 .newGameButton > div {
