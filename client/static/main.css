@@ -88,6 +88,15 @@ html {
     background-color: #ddd;
 }
 
+.loginSettings {
+	width: 100%;
+	margin-top: 20px;
+}
+
+.loginSettings > div {
+	margin-top: 10px;
+}
+
 .info > div {
 	margin-bottom: 20px;
 }
@@ -117,8 +126,8 @@ html {
 
 }
 
-input.gidInput {
-	width: 100px;
+input {
+	width: 120px;
 	padding: 3px;
 }
 

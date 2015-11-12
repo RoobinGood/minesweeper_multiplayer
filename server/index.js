@@ -7,7 +7,7 @@ var games = {};
 var onMessageHandlers = {};
 
 var webSocketServer = new WebSocketServer.Server({
-	port: 8081,
+	port: 8097,
 });
 
 webSocketServer.on('connection', function(ws) {

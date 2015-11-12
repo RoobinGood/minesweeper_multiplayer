@@ -8,6 +8,7 @@ require(
 		var localOptions = new can.Map({
 			uid: undefined,
 			gid: undefined,
+			server: "devself.com:8097",
 
 			gameInfo: {
 				userCount: undefined,
@@ -49,6 +50,7 @@ require(
 		var createPage = function(pageName, data) {
 			var pageData = {
 				createPage: createPage,
+				createWebsocket: createWebsocket,
 				localOptions: localOptions,
 			};
 			data && $.extend(pageData, data);
@@ -60,14 +62,14 @@ require(
 			}
 		};
 
-		try {
-			var server = "devself.com:8081";
+		var createWebsocket = function(success) {
+			var server = localOptions.attr("server");
 			console.log("server:", server);
 			var socket = new WebSocket(["ws://", server].join(""));
 			localOptions.attr("ws", socket);
-
+			console.log(localOptions.attr("ws"));
 			socket.onopen = function(event) {
-				createPage("login");
+				success();
 
 				localOptions.attr("setHandler")("login", 
 					function(data) {
@@ -96,11 +98,13 @@ require(
 					localOptions.attr("messageQueue").push(messageObj);
 					console.log("Push to queue");
 				}
-			}
-		} catch (err) {
-			console.log("error", err);
-			$("#out").html(["<div style=\"padding: 20px\"><h1>:'(</h1><br>",
-				"<h3>You browser doesn't support websockets<h3></div>"].join(""));
-		}
-		
+			};
+
+			socket.onclose = function () {
+				localOptions.attr("uid", undefined);
+				localOptions.attr("ws", undefined);
+			};
+		};
+
+		createPage("login");
 });

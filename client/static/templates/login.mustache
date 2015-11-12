@@ -16,9 +16,21 @@
 		</div>
 		<br>
 		or
-		<br>
-		<br>
+		<br><br>
 		<b>join:</b> 
-		<input type="text" placeholder="GameID" class="gidInput">
+		<input type="text" placeholder="GameID" id="gidInput">
+		<br><br>
+		<hr>
+		<div class="loginSettings">
+			<span class="button">
+				<i class="fa fa-cog"></i>&nbsp;Settings
+			</span>
+			{{#if showSettings}}
+			<div>
+				<b>Server:</b>
+				<input type="text" placeholder="address" value="{{server}}" id="serverInput">
+			</div>
+			{{/if}}
+		</div>
 	</div>
 </div>

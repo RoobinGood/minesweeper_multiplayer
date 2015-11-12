@@ -26,10 +26,18 @@ define("js/loginController",
 					"yCount": 20,
 					"mineCount": 70,
 				}],
+				showSettings: false,
+				server: self.options.localOptions.attr("server"),
 			});
 			$(element).fadeIn(self.options.localOptions.attr("gameInfo.animationTime"));
 			element.html(can.view(options.view, self.loginOptions));
 
+			if (self.options.localOptions.attr("uid")) {
+				self.setHandlers();
+			}
+		},
+		setHandlers: function() {
+			var self = this;
 			self.options.localOptions.attr("setHandler")("newgame", 
 				function(data) {
 					// console.log(data);
@@ -44,7 +52,7 @@ define("js/loginController",
 				function(data) {
 					// console.log(data);
 					if (data.result) {
-						self.startNewGame(data.properties);
+						self.showNewGame(data.properties);
 					} else {
 						alert("There is now game with that GameID");
 					}
@@ -54,14 +62,17 @@ define("js/loginController",
 			var self = this;
 			var properties = $(el).data().data;
 
-			self.options.localOptions.attr("ws").send(JSON.stringify({
-				"type": "newgame",
-				"data": {
-					"uid": self.options.localOptions.attr("uid"),
-					"properties": properties,
-				}
-			}));
+			self.startNewGame(function() {
+				self.options.localOptions.attr("ws").send(JSON.stringify({
+					"type": "newgame",
+					"data": {
+						"uid": self.options.localOptions.attr("uid"),
+						"properties": properties,
+					}
+				}));
+			});
 
+			this.loginOptions.attr("showLogin", false);
 		},
 		".newGameButton mouseenter": function() {
 			this.loginOptions.attr("showLogin", true);
@@ -69,7 +80,11 @@ define("js/loginController",
 		".newGameButton mouseleave": function() {
 			this.loginOptions.attr("showLogin", false);
 		},
-		"input keyup": function(el, event) {
+		".loginSettings .button click": function() {
+			this.loginOptions.attr("showSettings", 
+				!this.loginOptions.attr("showSettings"));
+		},
+		"#gidInput keyup": function(el, event) {
 			var KEY_ENTER = 13;
 
 			// console.log(event);
@@ -80,22 +95,37 @@ define("js/loginController",
 				self.options.localOptions.attr("gid", gid);
 				self.joinGame();
 			}
-
 		},
 		joinGame: function() {
 			var self = this;
 			var gid = self.options.localOptions.attr("gid");
 			var ws = self.options.localOptions.attr("ws");
 
-			ws.send(JSON.stringify({
-				"type": "join",
-				"data": {
-					"uid": self.options.localOptions.attr("uid"),
-					"gid": self.options.localOptions.attr("gid"),
-				}
-			}))
+			self.startNewGame(function() {
+				ws.send(JSON.stringify({
+					"type": "join",
+					"data": {
+						"uid": self.options.localOptions.attr("uid"),
+						"gid": self.options.localOptions.attr("gid"),
+					}
+				}));
+			});
 		},
-		startNewGame: function(gameProperties) {
+		startNewGame: function(callback) {
+			this.login(callback);
+		},
+		login: function(success) {
+			var self = this;
+			if (self.options.localOptions.attr("ws")) {
+				success();
+			} else {
+				self.options.createWebsocket(function() {
+					self.setHandlers();
+					success();
+				});
+			}
+		},
+		showNewGame: function(gameProperties) {
 			var self = this;
 
 			$(self.element).fadeOut(self.options.localOptions.attr("gameInfo.animationTime"), 
@@ -109,6 +139,14 @@ define("js/loginController",
 					});
 			});
 		},
+		"#serverInput change": function(el, event) {
+			var serverAddress = $(el).val();
+			var localOptions = this.options.localOptions;
+			if (localOptions.attr("uid")) {
+				localOptions.attr("ws").close();
+			}
+			localOptions.attr("server", serverAddress);
+		}
 	});
 
 	return LoginController;
