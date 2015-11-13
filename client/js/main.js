@@ -13,7 +13,7 @@ require(
 			gameInfo: {
 				userCount: undefined,
 				gameState: false,
-				animationTime: 10,
+				animationTime: 0,
 			},
 			
 			ws: undefined,
@@ -68,24 +68,6 @@ require(
 			var socket = new WebSocket(["ws://", server].join(""));
 			localOptions.attr("ws", socket);
 			console.log(localOptions.attr("ws"));
-			socket.onopen = function(event) {
-				success();
-
-				localOptions.attr("setHandler")("login", 
-					function(data) {
-						localOptions.attr("uid", data.uid);
-						// console.log("uid", localOptions.attr("uid"));
-				});
-				localOptions.attr("setHandler")("gameinfo", 
-					function(data) {
-						localOptions.attr("gameInfo.userCount", data.usercount);
-						// console.log("userCount", localOptions.attr("gameInfo.userCount"));
-				});
-
-				socket.send(JSON.stringify({
-					"type": "login",
-				}));
-			};
 
 			socket.onmessage = function(message) {
 				var messageObj = JSON.parse(message.data);
@@ -98,6 +80,26 @@ require(
 					localOptions.attr("messageQueue").push(messageObj);
 					console.log("Push to queue");
 				}
+			};
+
+			socket.onopen = function(event) {
+
+				localOptions.attr("setHandler")("login", 
+					function(data) {
+						localOptions.attr("uid", data.uid);
+						// console.log("uid", localOptions.attr("uid"));
+						success();
+				});
+				localOptions.attr("setHandler")("gameinfo", 
+					function(data) {
+						localOptions.attr("gameInfo.userCount", data.usercount);
+						// console.log("userCount", localOptions.attr("gameInfo.userCount"));
+				});
+
+				socket.send(JSON.stringify({
+					"type": "login",
+				}));
+				
 			};
 
 			socket.onclose = function () {

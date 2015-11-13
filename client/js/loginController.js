@@ -28,6 +28,7 @@ define("js/loginController",
 				}],
 				showSettings: false,
 				server: self.options.localOptions.attr("server"),
+				showLoader: false,
 			});
 			$(element).fadeIn(self.options.localOptions.attr("gameInfo.animationTime"));
 			element.html(can.view(options.view, self.loginOptions));
@@ -45,6 +46,7 @@ define("js/loginController",
 						self.options.localOptions.attr("gid", data.gid);
 						self.joinGame(); 
 					} else {
+						self.loginOptions.attr("showLoader", false);
 						alert("Can't create new game");
 					}
 			});
@@ -54,6 +56,7 @@ define("js/loginController",
 					if (data.result) {
 						self.showNewGame(data.properties);
 					} else {
+						self.loginOptions.attr("showLoader", false);
 						alert("There is now game with that GameID");
 					}
 			});
@@ -99,10 +102,9 @@ define("js/loginController",
 		joinGame: function() {
 			var self = this;
 			var gid = self.options.localOptions.attr("gid");
-			var ws = self.options.localOptions.attr("ws");
 
 			self.startNewGame(function() {
-				ws.send(JSON.stringify({
+				self.options.localOptions.attr("ws").send(JSON.stringify({
 					"type": "join",
 					"data": {
 						"uid": self.options.localOptions.attr("uid"),
@@ -112,6 +114,7 @@ define("js/loginController",
 			});
 		},
 		startNewGame: function(callback) {
+			this.loginOptions.attr("showLoader", true);
 			this.login(callback);
 		},
 		login: function(success) {
@@ -120,8 +123,10 @@ define("js/loginController",
 				success();
 			} else {
 				self.options.createWebsocket(function() {
-					self.setHandlers();
-					success();
+					if (self.options.localOptions.attr("ws")) {
+						self.setHandlers();
+						success();
+					}
 				});
 			}
 		},

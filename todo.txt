@@ -1,7 +1,8 @@
 * Choose map size
 - Fix synchronous win check
 - Clean old games on server
-- Choose server
+* Choose server
+* Loader animation
 - Choose random game to join
 ? Private game
 ? Game list

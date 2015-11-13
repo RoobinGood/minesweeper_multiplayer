@@ -97,6 +97,28 @@ html {
 	margin-top: 10px;
 }
 
+.loginBox.container {
+	position: relative;
+}
+
+#loader {
+	position: absolute;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(200, 200, 200);
+	margin-left: -30px;
+	background-color: rgba(250, 250, 250, 0.5);
+}
+
+.ball-pulse > div {
+	background: gray;
+	margin-top: 30%;
+}
+
+
+
+
 .info > div {
 	margin-bottom: 20px;
 }
