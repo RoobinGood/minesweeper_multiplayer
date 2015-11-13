@@ -3,6 +3,10 @@
 - Clean old games on server
 * Choose server
 * Loader animation
+- Try can-value to show cell info
+- Try css selectors to draw cell
+- Retry animation
+- Hover and active in map
 - Choose random game to join
 ? Private game
 ? Game list

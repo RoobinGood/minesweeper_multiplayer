@@ -2,8 +2,12 @@ require(
 	["jquery", "underscore", "can",
 	"js/prototypeController",
 	"js/loginController",
-	"js/gameController",],
-	function($, _, can, PrototypeController, LoginController, GameController) {
+	"js/gameController",
+	"fastclick"],
+	function($, _, can, PrototypeController, LoginController, GameController, FastClick) {
+
+		FastClick.attach(document.body);
+		console.log(FastClick);
 
 		var localOptions = new can.Map({
 			uid: undefined,
