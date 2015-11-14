@@ -7,7 +7,7 @@ require(
 	function($, _, can, PrototypeController, LoginController, GameController, FastClick) {
 
 		FastClick.attach(document.body);
-		console.log(FastClick);
+		// console.log(FastClick);
 
 		var localOptions = new can.Map({
 			uid: undefined,

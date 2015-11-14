@@ -31,7 +31,7 @@ define("js/mapController",
 				for (var j=0; j<self.map.properties.xCount; j++) {
 					self.map.attr("layers.openedTips")[i].push({
 						opened: false,
-						tip: undefined,
+						tip: "",
 						className: undefined,
 						flaged: false,
 					});
@@ -65,7 +65,7 @@ define("js/mapController",
 		getCoordinates: function(el) {
 			var x = $(el).data("x");
 			var y = $(el).closest("tr").data("y");
-			// console.log(x, y, el);
+			console.log(x, y, el);
 			return {
 				x: x,
 				y: y

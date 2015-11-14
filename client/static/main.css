@@ -160,30 +160,40 @@ table#mapTable {
 	margin-right: auto;
 }
 
-#mapTable td > div {
+#mapTable input {
 	border: 1px solid #444;
 	width: 20px;
 	height: 20px;
+	padding: 0;
+	margin: 0;
+	text-align: center;
 }
 
-.lowWarn {
-	background-color: #C1FF80;
+#mapTable input:disabled {
+	background-color: rgba(0, 0, 0, 0);
+	color: #000;
+	font-size: 16px;
+	font-family: "Helvetica Neue", Helvetica;
 }
 
-.midWarn {
+[class*="0"],[class*="1"],[class*="2"] {
+    background: #C1FF80;
+}
+
+[class*="3"],[class*="4"],[class*="5"] {
 	background-color: #FFFC80;
 }
 
-.hiWarn {
+[class*="6"],[class*="7"],[class*="8"] {
 	background-color: #FFC280;
 }
 
-.mine {
-	background-color: #FF8080;
+[class*="flag"] {
+	background-color: #8094FF;
 }
 
-.flag {
-	background-color: #8094FF;
+[class*="mine"] {
+	background-color: #FF8080;
 }
 
 .verticalAlign {

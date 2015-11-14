@@ -3,24 +3,10 @@
 		{{#each layers.openedTips}}
 		<tr data-y={{@index}}>
 			{{#each this}}
-				<td data-x={{@index}}>
-					{{#if opened}}
-						<div class="{{className}}">
-								<p>{{tip}}</p>
-						</div>	
-					{{/if}}
-					{{^if opened}}
-						{{#if flaged}}
-							<div class="flag">
-								<p>C</p>
-							</div>	
-						{{/if}}
-						{{^if flaged}}
-							<div></div>
-						{{/if}}
-					{{/if}}
+				<td data-x={{@index}} class="{{className}}">
+					<input value="{{tip}}" disabled>
 				</td>
-			{{/each}}
+			{{/each}}	
 		</tr>
 		{{/each}}
 		<tr getcellvalues="null" style="display: none"></div>
