@@ -27,6 +27,7 @@
 					{{^if gameInfo.gameResult}}
 						endGameLose
 					{{/if}}">
+					{{^if gameInfo.showLoader}}
 					<p class="verticalAlign">
 						{{#if gameInfo.gameResult}}
 							<b class="endGameResult">YOU WIN</b>
@@ -37,7 +38,15 @@
 						<br> 
 						<b>Click to retry</b> 
 					</p>
+					{{/if}}
 				</div>
+				{{#if gameInfo.showLoader}}
+				<div id="loader" class="loader-inner ball-pulse">
+					<div></div>
+					<div></div>
+					<div></div>
+				</div>
+				{{/if}}
 			{{/if}}
 		</div>
 	</div>

@@ -19,6 +19,8 @@ define("js/gameController",
 			self.options.localOptions.attr("gameInfo.flagedCount", 0);
 			self.options.localOptions.attr("gameInfo.mineCount", 
 				self.options.properties.mineCount);
+			self.options.localOptions.attr("gameInfo.showLoader", false);
+
 			element.html(can.view(options.view, self.options.localOptions));
 
 			$(element).fadeIn(self.options.localOptions.attr("gameInfo.animationTime"));
@@ -83,6 +85,10 @@ define("js/gameController",
 
 			self.options.localOptions.attr("setHandler")("join", 
 				function(data) {
+					if (!self.options.localOptions.attr("gameInfo.showLoader")) {
+						self.options.localOptions.attr("gameInfo.showLoader", true);
+					}
+					
 					$(self.element).fadeOut(self.options.localOptions.attr("gameInfo.animationTime"), 
 						function() {
 							self.cleanGame();
@@ -95,7 +101,7 @@ define("js/gameController",
 		},
 		".leaveButton click": function(el, event) {
 			var self = this;
-			$(self.element).fadeOut(50, function() {
+			$(self.element).fadeOut(self.options.localOptions.attr("animationTime"), function() {
 				self.options.localOptions.attr("ws").send(JSON.stringify({
 					"type": "leave",
 					"data": {
@@ -112,7 +118,7 @@ define("js/gameController",
 			utils.clip(this.options.localOptions.attr("gid"));
 		},
 		onClick: function(x, y) {
-			console.log("click", x, y);
+			// console.log("click", x, y);
 			var localOptions = this.options.localOptions;
 			if (localOptions.attr("gameInfo.gameState")) {
 				localOptions.attr("ws").send(JSON.stringify({
@@ -129,7 +135,7 @@ define("js/gameController",
 			}
 		}, 
 		onCheck: function(x, y, checkState) {
-			console.log("check", x, y);
+			// console.log("check", x, y);
 			var localOptions = this.options.localOptions;
 			if (localOptions.attr("gameInfo.gameState")) {
 				localOptions.attr("ws").send(JSON.stringify({
@@ -154,6 +160,7 @@ define("js/gameController",
 		},
 		"#endGameSplash click": function() {
 			var localOptions = this.options.localOptions;
+			localOptions.attr("gameInfo.showLoader", true);
 			localOptions.attr("ws").send(JSON.stringify({
 				"type": "restart",
 				"data": {

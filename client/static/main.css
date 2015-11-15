@@ -106,14 +106,12 @@ html {
 	top: 0;
 	width: 100%;
 	height: 100%;
-	background-color: rgba(200, 200, 200);
-	margin-left: -30px;
 	background-color: rgba(250, 250, 250, 0.5);
 }
 
-.ball-pulse > div {
-	background: gray;
-	margin-top: 30%;
+#loader > div {
+	background: #3E3E3E;
+	margin-top: 32%;
 }
 
 
@@ -176,16 +174,24 @@ table#mapTable {
 	font-family: "Helvetica Neue", Helvetica;
 }
 
+#mapTable input:hover {
+	background-color: rgba(0, 0, 0, 0.15);
+}
+
 [class*="0"],[class*="1"],[class*="2"] {
     background: #C1FF80;
 }
 
-[class*="3"],[class*="4"],[class*="5"] {
+[class*="3"],[class*="4"] {
 	background-color: #FFFC80;
 }
 
-[class*="6"],[class*="7"],[class*="8"] {
-	background-color: #FFC280;
+[class*="5"],[class*="6"] {
+	background-color: #FFCF80;
+}
+
+[class*="7"],[class*="8"] {
+	background-color: #FFBF80;
 }
 
 [class*="flag"] {

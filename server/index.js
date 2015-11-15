@@ -222,7 +222,7 @@ onMessageHandlers = {
 	},
 	restart: function(client, data) {
 		var game = games[data.gid];
-		if (game) {
+		if (game && game.state === false) {
 			var gameProperties = game.map.properties;
 			// console.log(gameProperties);
 			game.map = new Map(gameProperties);

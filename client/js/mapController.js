@@ -45,11 +45,19 @@ define("js/mapController",
 					cellEl.preventDefault();
 					var coordinates = self.getCoordinates(cellEl.currentTarget);
 					if (!self.map.layers.openedTips[coordinates.y][coordinates.x].opened) {
-
 						self.options.onCheck(coordinates.x, coordinates.y, 
 							!self.map.layers.openedTips[coordinates.y][coordinates.x].flaged);
 					}
-				})
+				});
+
+				$(el).prev().find("td").on("click", function(cellEl) {
+					// console.log("check", arguments);
+					var coordinates = self.getCoordinates(cellEl.currentTarget);
+					if (self.map.layers.openedTips[coordinates.y][coordinates.x].flaged) {
+						// console.log("unflaged");
+						self.options.onCheck(coordinates.x, coordinates.y, false);
+					}
+				});
 			});
    			
 			element.html(can.view(options.view, self.map));
@@ -65,7 +73,7 @@ define("js/mapController",
 		getCoordinates: function(el) {
 			var x = $(el).data("x");
 			var y = $(el).closest("tr").data("y");
-			console.log(x, y, el);
+			// console.log(x, y, el);
 			return {
 				x: x,
 				y: y

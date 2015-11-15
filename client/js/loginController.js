@@ -16,15 +16,15 @@ define("js/loginController",
 				properties: [{
 					"xCount": 15,
 					"yCount": 10,
-					"mineCount": 15,
+					"mineCount": 20,
 				}, {
 					"xCount": 20,
 					"yCount": 15,
-					"mineCount": 40,
+					"mineCount": 50,
 				}, {
 					"xCount": 30,
 					"yCount": 20,
-					"mineCount": 70,
+					"mineCount": 90,
 				}],
 				showSettings: false,
 				server: self.options.localOptions.attr("server"),
