@@ -14,8 +14,8 @@ define("js/loginController",
 			self.loginOptions  = new can.Map({
 				showLogin: false,
 				properties: [{
-					"xCount": 15,
-					"yCount": 10,
+					"xCount": 14,
+					"yCount": 11,
 					"mineCount": 20,
 				}, {
 					"xCount": 20,
@@ -24,7 +24,11 @@ define("js/loginController",
 				}, {
 					"xCount": 30,
 					"yCount": 20,
-					"mineCount": 90,
+					"mineCount": 100,
+				}, {
+					"xCount": 50,
+					"yCount": 40,
+					"mineCount": 250,
 				}],
 				showSettings: false,
 				server: self.options.localOptions.attr("server"),

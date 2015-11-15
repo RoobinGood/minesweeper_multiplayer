@@ -85,18 +85,21 @@ define("js/gameController",
 
 			self.options.localOptions.attr("setHandler")("join", 
 				function(data) {
-					if (!self.options.localOptions.attr("gameInfo.showLoader")) {
-						self.options.localOptions.attr("gameInfo.showLoader", true);
-					}
+					self.options.localOptions.attr("gameInfo.showLoader", true);
+					console.log("load...", self.options.localOptions.attr("gameInfo.showLoader"));
 					
-					$(self.element).fadeOut(self.options.localOptions.attr("gameInfo.animationTime"), 
-						function() {
-							self.cleanGame();
-							self.destroyController();
-							self.options.createPage("game", {
-								properties: data.properties,
-							});
-					});
+					// hack to show loader
+					setTimeout(function() {
+						$(self.element).fadeOut(self.options.localOptions.attr("gameInfo.animationTime"), 
+							function() {
+								self.cleanGame();
+								self.destroyController();
+								self.options.createPage("game", {
+									properties: data.properties,
+								});
+								console.log($("#map").find("#loader"));
+						});
+					}, 1);
 			});
 		},
 		".leaveButton click": function(el, event) {
